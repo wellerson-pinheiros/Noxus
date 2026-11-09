@@ -1,75 +1,66 @@
-# React + TypeScript + Vite
+# ⚡ Noxus
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> *Onde a inteligência artificial encontra a alta performance e o design imersivo.*
 
-Currently, two official plugins are available:
+## 👁️ A Alma por Trás do Nome: Quem é Noxus?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O Noxus não é apenas um nome de projeto; ele é inspirado em **Noxus**, um personagem fictício original criado por mim. Noxus personifica a dualidade entre a frieza analítica da tecnologia avançada e a intensidade criativa da mente humana. Nasceu nas páginas de histórias conceituadas em universos de ficção especulativa, caracterizado por sua mente cibernética, foco inabalável e busca implacável por evolução. 
 
-## React Compiler
+Trazer o Noxus para o código significa injetar essa mesma personalidade no software: uma interface afiada, inteligente, misteriosa nos detalhes e extremamente poderosa em sua execução. Cada animação e resposta da IA ecoam a essência desse universo.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🎨 Da Concepção à Tela: Prototipagem no Figma
 
-## Expanding the ESLint configuration
+Antes de cada linha de código ser escrita, o universo de Noxus tomou forma no **Figma**. Nosso processo de design foi pensado como a construção de um refúgio cibernético:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **Design System Dedicado:** Criação de variáveis de cores profundas, tokens de tipografia futurista e componentes reutilizáveis para garantir coesão visual.
+* **Prototipagem de Alta Fidelidade (Hi-Fi):** Simulação de estados complexos de transição, carregamento e respostas da IA para validar a usabilidade antes do desenvolvimento.
+* **Animações Mapeadas:** O comportamento do **GSAP** foi planejado diretamente no fluxo de telas, antecipando curvas de aceleração, *easing* e o ritmo magnético das transições de página.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tecnologias Utilizadas
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+O stack do Noxus foi escolhido a dedo para garantir velocidade, escalabilidade e uma experiência visual de cair o queixo:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Tecnologia | Função no Projeto | 
+| ----- | ----- | 
+| **React** | Biblioteca principal para a construção de componentes modulares e reativos. | 
+| **TypeScript** | Garantia de tipagem estática, segurança e DX (Developer Experience) superior. | 
+| **Vite** | Ferramenta de build ultrarrápida que otimiza o ciclo de desenvolvimento. | 
+| **Tailwind CSS** | Estilização ágil e responsiva baseada em utilitários, mantendo o design limpo. | 
+| **GSAP (GreenSock)** | Motor de animações de alto desempenho para transições fluidas e efeitos visuais imersivos. | 
+| **Inteligência Artificial (IA)** | Camada cognitiva integrada para processamento inteligente, automações e respostas dinâmicas. | 
 
+## 🚀 Como Executar o Projeto
+
+Siga os passos abaixo para rodar o Noxus em sua máquina local:
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/seu-usuario/noxus.git
+
+# 2. Entre na pasta do projeto
+cd noxus
+
+# 3. Instale as dependências
+npm install
+
+# 4. Inicie o servidor de desenvolvimento
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## 🤝 Contribuindo com o Projeto
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+O universo de Noxus está em expansão constante, e toda ajuda é bem-vinda para tornar esta experiência ainda mais impressionante! Se você deseja fazer parte da jornada, siga os passos abaixo:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Faça um **Fork** do projeto.
+2. Crie uma nova branch para a sua feature (`git checkout -b feature/nova-funcionalidade`).
+3. Faça o commit das suas alterações (`git commit -m 'Adiciona nova funcionalidade incrivel'`).
+4. Faça o **Push** para a branch (`git push origin feature/nova-funcionalidade`).
+5. Abra um **Pull Request**.
 
-```
+Certifique-se de seguir os padrões de código, testes e manter a coesão visual alinhada à essência do projeto.
+
+## 🔮 Futuro do Noxus
+
+* [ ] Expansão dos modelos de IA integrados.
+* [ ] Novos temas visuais customizáveis inspirados no lore do personagem.
+* [ ] Otimizações avançadas de acessibilidade (a11y).
