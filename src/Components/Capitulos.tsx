@@ -239,9 +239,6 @@ function Capitulos() {
 
   return (
     <>
-      {/* Espaçamento entre a hero e os capítulos */}
-      <div className="h-16 md:h-28 bg-[#0b1220]" aria-hidden="true" />
-
       <div ref={wrapperRef} className="relative w-full">
       <section
         ref={sectionRef}
@@ -266,6 +263,9 @@ function Capitulos() {
           className="absolute inset-0 z-20 pointer-events-none bg-black"
           style={{ opacity: 1 }}
         />
+
+        {/* Transição escura só nas bordas de cima e de baixo, para a seção não ficar demarcada */}
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,#000_0%,rgba(0,0,0,0)_20%,rgba(0,0,0,0)_75%,#000_100%)]" />
 
         {/* Escurecimento para legibilidade do texto */}
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/70 via-black/10 to-black/40 md:bg-gradient-to-r md:from-black/30 md:via-transparent md:to-black/30" />
