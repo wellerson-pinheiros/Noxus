@@ -1,10 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import personagem from "../assets/personagem-hero-removebg-preview.png";
 import caveira from "../assets/caveira-indicacao-rolagem.svg";
 import linhaCaveira from "../assets/Linha-caveira.svg?url";
 import mouseRolagem from "../assets/mause-rolagem-baixo.svg";
+import subtractMobile from "../assets/mobile-hero/subtract-mobile.svg";
+import logoSkull from "../assets/mobile-hero/logo-skull.svg";
+import logoXm from "../assets/mobile-hero/logo-xm.svg";
+import chamas from "../assets/mobile-hero/chamas.png";
 import { marcarHeroPronta, reportarProgresso } from "./heroPronta";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,9 +38,26 @@ const FRAME_H = 1080;
 
 // Distância de rolagem usada na transição (em % da altura da viewport).
 // Aumente para uma transição mais lenta, diminua para mais rápida.
-const DISTANCIA_SCROLL = "+=800%";
+const DISTANCIA_SCROLL = "+=300%";
 
 const midia = "absolute inset-0 w-full h-full object-cover object-bottom";
+
+// Mobile (frame iPhone 16, 393x852): o Subtract mobile vira máscara da área do vídeo.
+// Medidas em cqw (1% da largura do frame), por isso a caixa usa o mesmo vídeo do desktop.
+const mascaraMobile: CSSProperties = {
+  left: "0.127cqw",
+  top: "99.49cqw",
+  width: "99.746cqw",
+  height: "114.76cqw",
+  WebkitMaskImage: `url("${subtractMobile}")`,
+  maskImage: `url("${subtractMobile}")`,
+  WebkitMaskSize: "100% 100%",
+  maskSize: "100% 100%",
+  WebkitMaskRepeat: "no-repeat",
+  maskRepeat: "no-repeat",
+};
+
+const MOBILE_MAX = "(max-width: 767px)";
 
 const fonteTitulo = "'Butcherman Caps', 'Butcherman', cursive";
 const fonteTexto = "'Bodoni Moda SC', serif";
@@ -52,6 +73,15 @@ function Home() {
   const [pronto, setPronto] = useState(false);
   // Só muda quando cruza o limiar, para evitar re-render a cada frame
   const [rolou, setRolou] = useState(false);
+  // Layout de celular (iPhone 16) abaixo de 768px
+  const [mobile, setMobile] = useState(() => window.matchMedia(MOBILE_MAX).matches);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MAX);
+    const trocar = (e: MediaQueryListEvent) => setMobile(e.matches);
+    mq.addEventListener("change", trocar);
+    return () => mq.removeEventListener("change", trocar);
+  }, []);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -152,7 +182,7 @@ function Home() {
 
   return (
     <div ref={wrapperRef} className="relative w-screen">
-      <section ref={sectionRef} className="relative w-screen h-screen overflow-hidden bg-[#141c26]">
+      <section ref={sectionRef} className={`relative w-screen h-dvh overflow-hidden ${mobile ? "bg-[#121c2e]" : "bg-[#141c26]"}`}>
         {/* Definição do recorte (Subtract) */}
         <svg width="0" height="0" className="absolute" aria-hidden="true">
           <defs>
@@ -162,14 +192,24 @@ function Home() {
           </defs>
         </svg>
 
+        {/* No mobile, esta área é o frame iPhone 16 inteiro; no desktop não cria caixa, então nada muda */}
+        <div className={mobile ? "@container absolute left-0 top-0 w-screen aspect-[393/852]" : "contents"}>
         {/* Caixa com a proporção do Subtract: cobre a tela sem distorcer a geometria */}
         <div
-          className="absolute left-1/2 top-[calc(58%+20px)] -translate-x-1/2 -translate-y-1/2 bg-[#F4F4F4]"
-          style={{
-            width: `max(98vw, calc(100vh * ${ASPECT}))`,
-            aspectRatio: `${ASPECT}`,
-            clipPath: "url(#subtract-clip)",
-          }}
+          className={
+            mobile
+              ? "absolute bg-[#C2C2C2]"
+              : "absolute left-1/2 top-[calc(58%+20px)] -translate-x-1/2 -translate-y-1/2 bg-[#F4F4F4]"
+          }
+          style={
+            mobile
+              ? mascaraMobile
+              : {
+                  width: `max(98vw, calc(100dvh * ${ASPECT}))`,
+                  aspectRatio: `${ASPECT}`,
+                  clipPath: "url(#subtract-clip)",
+                }
+          }
         >
           {/* Imagem inicial (fallback enquanto os frames carregam) */}
           <img
@@ -192,7 +232,7 @@ function Home() {
         </div>
 
         {/* Textos ao lado do personagem */}
-        <div className="absolute inset-0 z-20 flex flex-col md:flex-row items-center justify-between gap-6 px-6 md:px-16 pointer-events-none">
+        <div className={mobile ? "hidden" : "absolute inset-0 z-20 flex flex-col md:flex-row items-center justify-between gap-6 px-6 md:px-16 pointer-events-none"}>
           <h1
             className={`${
               rolou ? "text-white" : "text-black"
@@ -215,8 +255,45 @@ function Home() {
           </p>
         </div>
 
+        {mobile && (
+          <>
+            {/* Logo XM no canto superior esquerdo (Figma iPhone 16) */}
+            <div className="absolute left-[8.65cqw] top-[9.92cqw] h-[10.18cqw] w-[32.82cqw]">
+              <img src={logoSkull} alt="" className="absolute left-[11.7cqw] top-0 h-[11.2cqw] w-[9.92cqw]" />
+              <img src={logoXm} alt="" className="absolute left-[12.47cqw] top-[5.6cqw] h-[3.05cqw] w-[8.4cqw]" />
+              <div className="absolute" style={{ left: "16.54cqw", top: "1.27cqw", width: "16.28cqw", height: "8.91cqw" }}>
+                <img src={chamas} alt="" className="absolute inset-0 size-full object-cover" style={{ transform: "scaleY(-1) rotate(180deg)", opacity: 0.88 }} />
+              </div>
+              <div className="absolute" style={{ left: "0cqw", top: "1.27cqw", width: "16.28cqw", height: "8.91cqw" }}>
+                <img src={chamas} alt="" className="absolute inset-0 size-full object-cover" style={{ transform: "scaleY(-1) rotate(180deg)", opacity: 0.88 }} />
+              </div>
+            </div>
+
+            {/* Textos do mobile, centralizados como no Figma */}
+            <h1
+              className="absolute left-[50.13cqw] top-[34.61cqw] w-[90cqw] -translate-x-1/2 text-center text-[18.83cqw] leading-normal text-[#f4f4f4]"
+              style={{ fontFamily: fonteTitulo }}
+            >
+              Noxus
+            </h1>
+            <p
+              className="absolute left-[52.04cqw] top-[62.85cqw] w-[95.93cqw] -translate-x-1/2 text-center text-[4.07cqw] leading-[1.015] tracking-[-0.2036cqw] text-[#f4f4f4]"
+              style={{ fontFamily: fonteTitulo }}
+            >
+              Fear the silence. Embrace the darkness
+            </p>
+            <p
+              className="absolute left-[52.04cqw] top-[75.95cqw] w-[89.82cqw] -translate-x-1/2 -translate-y-1/2 text-center text-[3.05cqw] italic font-medium leading-[1.22] tracking-[0.58cqw] text-[#f4f4f4]"
+              style={{ fontFamily: fonteTexto }}
+            >
+              Envolto por uma fumaça negra viva e guiado por uma energia desconhecida, NOXIS caminha entre a luz e a escuridão.
+            </p>
+          </>
+        )}
+        </div>
+
         {/* Caveira descendo pela linha conforme a rolagem (canto superior direito) */}
-        <div className="absolute right-10 top-16 md:right-16 md:top-20 h-[70vh] w-6 z-30 pointer-events-none">
+        <div className="absolute right-10 top-16 md:right-16 md:top-20 h-[70vh] w-6 z-30 pointer-events-none max-md:hidden">
           <div
             ref={linhaRef}
             className="absolute left-1/2 top-0 w-0.5 -translate-x-1/2"

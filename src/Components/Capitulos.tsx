@@ -242,7 +242,7 @@ function Capitulos() {
       <div ref={wrapperRef} className="relative w-full">
       <section
         ref={sectionRef}
-        className="relative w-full h-screen overflow-hidden bg-[#182533] text-white"
+        className="relative w-full h-dvh overflow-hidden bg-[#182533] text-white"
         style={{
           backgroundImage:
             "radial-gradient(ellipse 60% 60% at 50% 50%, rgba(29,58,99,1) 0%, rgba(20,38,66,1) 50%, rgba(11,18,32,1) 100%)",
