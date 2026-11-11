@@ -5,13 +5,14 @@ import personagem from "../assets/personagem-hero-removebg-preview.png";
 import caveira from "../assets/caveira-indicacao-rolagem.svg";
 import linhaCaveira from "../assets/Linha-caveira.svg?url";
 import mouseRolagem from "../assets/mause-rolagem-baixo.svg";
-import { marcarHeroPronta } from "./heroPronta";
+import { marcarHeroPronta, reportarProgresso } from "./heroPronta";
 
 gsap.registerPlugin(ScrollTrigger);
 
 // Frames da animação, em ordem numérica (frame_005.png ... frame_046.png)
 const frameUrls = Object.entries(
-  import.meta.glob("../assets/video_hero_frames/*.png", {
+  // import.meta.glob("../assets/video_hero_frames/*.png", {
+  import.meta.glob("../assets/video_hero_frames8/*.webp", {
     eager: true,
     query: "?url",
     import: "default",
@@ -92,7 +93,16 @@ function Home() {
       return img;
     });
 
-    Promise.all(imgs.map((img) => img.decode().catch(() => null))).then(() => {
+    // Conta cada frame decodificado para alimentar o pré-loader
+    let carregadas = 0;
+    Promise.all(
+      imgs.map((img) =>
+        img.decode().catch(() => null).then(() => {
+          carregadas++;
+          reportarProgresso(carregadas / imgs.length);
+        }),
+      ),
+    ).then(() => {
       if (cancelado) return;
 
       setPronto(true);
