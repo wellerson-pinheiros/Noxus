@@ -8,7 +8,7 @@ const fonteCorpo = "'Inter', sans-serif";
 // WF 01 — Hero. Medidas em cqw (1% da largura do frame de 1920px) para acompanhar o layout do Figma em qualquer tela
 function WfHero() {
   return (
-    <section className="@container relative w-full aspect-video overflow-hidden bg-[#f4f4f4]">
+    <section id="wf-hero" className="@container relative w-full aspect-video overflow-hidden bg-[#f4f4f4]">
       <img src={heroImg} alt="" className="absolute inset-0 size-full object-cover" />
 
       {/* Escurecimento radial que sai do centro e escurece as bordas */}

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import personagem from "../assets/personagem-hero-removebg-preview.png";
 import caveira from "../assets/caveira-indicacao-rolagem.svg";
 import linhaCaveira from "../assets/Linha-caveira.svg?url";
 import mouseRolagem from "../assets/mause-rolagem-baixo.svg";
+import primeiroFrame from "../assets/video_hero_frames/frame_005.png";
 import subtractMobile from "../assets/mobile-hero/subtract-mobile.svg";
 import logoSkull from "../assets/mobile-hero/logo-skull.svg";
 import logoXm from "../assets/mobile-hero/logo-xm.svg";
@@ -15,8 +15,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Frames da animação, em ordem numérica (frame_005.png ... frame_046.png)
 const frameUrls = Object.entries(
-  // import.meta.glob("../assets/video_hero_frames/*.png", {
-  import.meta.glob("../assets/video_hero_frames8/*.webp", {
+  import.meta.glob("../assets/video_hero_frames/*.png", {
+  // import.meta.glob("../assets/video_hero_frames8/*.webp", {
     eager: true,
     query: "?url",
     import: "default",
@@ -211,9 +211,10 @@ function Home() {
                 }
           }
         >
+
           {/* Imagem inicial (fallback enquanto os frames carregam) */}
           <img
-            src={personagem}
+            src={primeiroFrame}
             alt="Personagem NOXUS"
             className={`${midia} transition-opacity duration-700 will-change-[opacity] ${
               pronto ? "opacity-0 invisible" : "opacity-100"

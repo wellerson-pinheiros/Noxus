@@ -1,7 +1,23 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import logo from "../assets/logo.svg";
 import seta from "../assets/seta-botao-contato.svg";
 import menuIcon from "../assets/mobile-hero/menu.png";
+
+const WHATSAPP = "https://wa.me/5511914881120";
+
+// Rola suavemente até o topo da página
+function voltarAoTopo(e: MouseEvent<HTMLAnchorElement>) {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Rola suavemente até a seção com o id informado
+function irPara(e: MouseEvent<HTMLAnchorElement>, id: string) {
+  e.preventDefault();
+  const alvo = document.getElementById(id);
+  if (!alvo) return;
+  window.scrollTo({ top: alvo.getBoundingClientRect().top + window.scrollY, behavior: "smooth" });
+}
 
 function Header() {
   const [aberto, setAberto] = useState(false);
@@ -10,11 +26,13 @@ function Header() {
     <>
         {/* Barra de navegação do desktop: no celular o menu hamburger substitui os links */}
         <div className="navBar max-md:hidden w-full flex justify-between justify-items-center items-center p-10 ">
-            <div className="logo"><img src={logo} alt="Logo do site" /></div>
+            <a href="#" onClick={voltarAoTopo} aria-label="Voltar ao início" className="logo">
+              <img src={logo} alt="Logo do site" />
+            </a>
             <div className="links-navegacao text-2xl text-white flex  gap-8 pr-10 items-center" >
-                <a href="">Projetos</a>
-                <a href="">Sobre</a>
-                <a href="#contato" className="button-contato bg-white rounded-full text-black flex items-center gap-2 p-2 font-medium hover:bg-gray-200 transition-all">
+                <a href="#galeria" onClick={(e) => irPara(e, "galeria")}>Projetos</a>
+                <a href="#wf-hero" onClick={(e) => irPara(e, "wf-hero")}>Sobre</a>
+                <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="button-contato bg-white rounded-full text-black flex items-center gap-2 p-2 font-medium hover:bg-gray-200">
         <span>Contato</span>
         <img src={seta} alt="Seta do botao de contato" className="w-5 h-5" />
     </a>
@@ -43,9 +61,31 @@ function Header() {
             aria-label="Menu"
             className="md:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 bg-[#182533] text-2xl text-white"
           >
-            <a href="" onClick={() => setAberto(false)}>Projetos</a>
-            <a href="" onClick={() => setAberto(false)}>Sobre</a>
-            <a href="#contato" onClick={() => setAberto(false)} className="rounded-full bg-white px-6 py-2 font-medium text-black">
+            <a
+              href="#galeria"
+              onClick={(e) => {
+                setAberto(false);
+                irPara(e, "galeria");
+              }}
+            >
+              Projetos
+            </a>
+            <a
+              href="#wf-hero"
+              onClick={(e) => {
+                setAberto(false);
+                irPara(e, "wf-hero");
+              }}
+            >
+              Sobre
+            </a>
+            <a
+              href={WHATSAPP}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setAberto(false)}
+              className="rounded-full bg-white px-6 py-2 font-medium text-black"
+            >
               Contato
             </a>
           </nav>
