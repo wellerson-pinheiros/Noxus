@@ -6,6 +6,8 @@ import linhaCaveira from "../assets/Linha-caveira.svg?url";
 import mouseRolagem from "../assets/mause-rolagem-baixo.svg";
 import primeiroFrame from "../assets/video_hero_frames/frame_005.png";
 import subtractMobile from "../assets/mobile-hero/subtract-mobile.svg";
+import subtractNotebook from "../assets/mobile-hero/Subtract-notebook.png";
+import subtractTablet from "../assets/mobile-hero/Subtract-tablet.png";
 import logoSkull from "../assets/mobile-hero/logo-skull.svg";
 import logoXm from "../assets/mobile-hero/logo-xm.svg";
 import chamas from "../assets/mobile-hero/chamas.png";
@@ -30,8 +32,6 @@ const frameUrls = Object.entries(
 const SUBTRACT_PATH =
   "M0.74415 0C0.75032 0 0.75532 0.00913 0.75532 0.02039V0.04757C0.75532 0.05883 0.76032 0.06796 0.76649 0.06796H0.98883C0.995 0.06796 1 0.07709 1 0.08835V0.97961C1 0.99087 0.995 1 0.98883 1H0.00798C0.00651 1 0.00532 0.99783 0.00532 0.99515C0.00532 0.99247 0.00413 0.99029 0.00266 0.99029C0.00119 0.99029 0 0.98812 0 0.98544V0.07864C0 0.06738 0.005 0.05825 0.01117 0.05825H0.10319C0.10936 0.05825 0.11436 0.04912 0.11436 0.03786V0.02039C0.11436 0.00913 0.11936 0 0.12553 0H0.74415Z";
 
-const ASPECT = 1880 / 1030;
-
 // Resolução dos frames
 const FRAME_W = 1920;
 const FRAME_H = 1080;
@@ -45,9 +45,9 @@ const midia = "absolute inset-0 w-full h-full object-cover object-bottom";
 // Mobile (frame iPhone 16, 393x852): o Subtract mobile vira máscara da área do vídeo.
 // Medidas em cqw (1% da largura do frame), por isso a caixa usa o mesmo vídeo do desktop.
 const mascaraMobile: CSSProperties = {
-  left: "0.127cqw",
+  left: "0cqw",
   top: "99.49cqw",
-  width: "99.746cqw",
+  width: "100cqw",
   height: "114.76cqw",
   WebkitMaskImage: `url("${subtractMobile}")`,
   maskImage: `url("${subtractMobile}")`,
@@ -58,6 +58,9 @@ const mascaraMobile: CSSProperties = {
 };
 
 const MOBILE_MAX = "(max-width: 767px)";
+// Tablet (768 a 850px): usa o Subtract-tablet, em formato retrato (728x837)
+const TABLET_MQ = "(min-width: 768px) and (max-width: 850px)";
+const TABLET_ASPECT = 728 / 837;
 
 const fonteTitulo = "'Butcherman Caps', 'Butcherman', cursive";
 const fonteTexto = "'Bodoni Moda SC', serif";
@@ -75,10 +78,19 @@ function Home() {
   const [rolou, setRolou] = useState(false);
   // Layout de celular (iPhone 16) abaixo de 768px
   const [mobile, setMobile] = useState(() => window.matchMedia(MOBILE_MAX).matches);
+  // Faixa de tablet (768 a 850px), com o Subtract-tablet
+  const [tablet, setTablet] = useState(() => window.matchMedia(TABLET_MQ).matches);
 
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_MAX);
     const trocar = (e: MediaQueryListEvent) => setMobile(e.matches);
+    mq.addEventListener("change", trocar);
+    return () => mq.removeEventListener("change", trocar);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia(TABLET_MQ);
+    const trocar = (e: MediaQueryListEvent) => setTablet(e.matches);
     mq.addEventListener("change", trocar);
     return () => mq.removeEventListener("change", trocar);
   }, []);
@@ -193,22 +205,25 @@ function Home() {
         </svg>
 
         {/* No mobile, esta área é o frame iPhone 16 inteiro; no desktop não cria caixa, então nada muda */}
-        <div className={mobile ? "@container absolute left-0 top-0 w-screen aspect-[393/852]" : "contents"}>
+        <div className={mobile ? "@container absolute left-1/2 top-0 -translate-x-1/2 w-[min(100vw,calc(100dvh*0.46127))] aspect-[393/852]" : "contents"}>
         {/* Caixa com a proporção do Subtract: cobre a tela sem distorcer a geometria */}
         <div
           className={
             mobile
               ? "absolute bg-[#C2C2C2]"
-              : "absolute left-1/2 top-[calc(58%+20px)] -translate-x-1/2 -translate-y-1/2 bg-[#F4F4F4]"
+              : "absolute left-1/2 top-[calc(58%+20px)] -translate-x-1/2 -translate-y-1/2 aspect-[1.82524] w-[max(98vw,calc(100dvh*1.82524))] bg-[#F4F4F4] [clip-path:url(#subtract-clip)] max-[1500px]:top-[calc(50%+60px)] max-[1500px]:w-[min(98vw,calc((100dvh-120px)*1.82524))] max-[1500px]:[clip-path:none] max-[1500px]:[mask-image:var(--subtract-notebook)] max-[1500px]:[mask-size:100%_100%] max-[1500px]:[mask-repeat:no-repeat] max-[1500px]:[-webkit-mask-image:var(--subtract-notebook)] max-[1500px]:[-webkit-mask-size:100%_100%]"
           }
           style={
             mobile
               ? mascaraMobile
-              : {
-                  width: `max(98vw, calc(100dvh * ${ASPECT}))`,
-                  aspectRatio: `${ASPECT}`,
-                  clipPath: "url(#subtract-clip)",
-                }
+              : tablet
+                ? ({
+                    "--subtract-notebook": `url("${subtractTablet}")`,
+                    top: "calc(50% + 60px)",
+                    width: "min(98vw, calc((100dvh - 120px) * 0.86988))",
+                    aspectRatio: `${TABLET_ASPECT}`,
+                  } as CSSProperties)
+                : ({ "--subtract-notebook": `url("${subtractNotebook}")` } as CSSProperties)
           }
         >
 
@@ -233,15 +248,15 @@ function Home() {
         </div>
 
         {/* Textos ao lado do personagem */}
-        <div className={mobile ? "hidden" : "absolute inset-0 z-20 flex flex-col md:flex-row items-center justify-between gap-6 px-6 md:px-16 pointer-events-none"}>
+        <div className={mobile ? "hidden" : "absolute inset-0 max-[1500px]:top-[120px] min-[851px]:max-[1500px]:inset-x-auto min-[851px]:max-[1500px]:left-1/2 min-[851px]:max-[1500px]:w-[min(98vw,calc((100dvh-120px)*1.82524))] min-[851px]:max-[1500px]:-translate-x-1/2 z-20 flex flex-col md:flex-row max-[850px]:flex-col! max-[850px]:justify-center items-center justify-between gap-6 px-6 md:px-16 pointer-events-none"}>
           <h1
             className={`${
               rolou ? "text-white" : "text-black"
-            } transition-colors duration-700 text-center md:text-left font-bold uppercase leading-none tracking-wide w-full md:w-1/3`}
+            } transition-colors duration-700 text-center md:text-left font-bold uppercase leading-none tracking-wide w-full md:w-1/3 max-[850px]:w-full! max-[850px]:text-center!`}
             style={{ fontFamily: fonteTitulo }}
           >
-            <span className="block text-[clamp(3rem,8vw,8rem)]">Noxus</span>
-            <span className={`block text-[clamp(1rem,2.2vw,2.25rem)] mt-2 transition-colors duration-700 ${rolou ? "text-white" : "text-black"}`}>
+            <span className="block text-[clamp(3rem,8vw,8rem)] min-[851px]:max-[1500px]:text-[clamp(2.25rem,5.5vw,6rem)]">Noxus</span>
+            <span className={`block text-[clamp(1rem,2.2vw,2.25rem)] min-[851px]:max-[1500px]:text-[clamp(0.875rem,1.7vw,1.6rem)] mt-2 transition-colors duration-700 ${rolou ? "text-white" : "text-black"}`}>
               Fear The Silence- Embrace The Darkness
             </span>
           </h1>
@@ -249,7 +264,7 @@ function Home() {
           <p
             className={`${
               rolou ? "text-white" : "text-black"
-            } transition-colors duration-700 text-center md:text-left italic uppercase tracking-[0.2em] leading-relaxed text-[clamp(0.85rem,1.3vw,1.25rem)] w-full md:w-1/3 md:max-w-md`}
+            } transition-colors duration-700 text-center md:text-left italic uppercase tracking-[0.2em] leading-relaxed text-[clamp(0.85rem,1.3vw,1.25rem)] min-[851px]:max-[1500px]:text-[clamp(0.75rem,1vw,1rem)] w-full md:w-1/3 md:max-w-md max-[850px]:w-full! max-[850px]:text-center!`}
             style={{ fontFamily: fonteTexto }}
           >
             Envolto por uma fumaça negra viva e guiado por uma energia desconhecida, NOXIS caminha entre a luz e a escuridão.
